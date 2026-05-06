@@ -72,13 +72,14 @@ async function refreshStatus() {
             txt.textContent = `Online · ${ocrLabel}`;
             $("not-trained").hidden = true;
 
-            // Inject metrics into hero
+            // Inject metrics into hero + dedicated Metrics section
             const m = j.metrics?.stacking_ensemble;
             if (m) {
                 $("stat-mae-value").textContent  = m.mae?.toFixed(3) ?? "–";
                 $("stat-rmse-value").textContent = m.rmse?.toFixed(3) ?? "–";
                 $("stat-r2-value").textContent   = (m.r2 != null) ? m.r2.toFixed(3) : "–";
             }
+            renderMetricsSection(j.metrics || {});
         } else {
             pill.classList.remove("is-pending");
             pill.classList.add("is-error");
@@ -89,6 +90,48 @@ async function refreshStatus() {
         pill.classList.remove("is-pending");
         pill.classList.add("is-error");
         txt.textContent = "Offline";
+    }
+}
+
+
+// ── METRICS SECTION ────────────────────────────────────────────────
+function renderMetricsSection(metrics) {
+    const tbody = $("metrics-tbody");
+    const rows  = [
+        ["Random Forest",     "random_forest"],
+        ["Gradient Boosting", "gradient_boost"],
+        ["Deep Regressor",    "deep_regressor"],
+        ["Stacking Ensemble", "stacking_ensemble"],
+    ].map(([label, key]) => ({ label, key, m: metrics[key] }))
+     .filter(r => r.m);
+
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="metrics-empty">Train the models to populate metrics.</td></tr>';
+    } else {
+        // Find the row with the lowest MAE — highlight as "best"
+        const bestKey = rows.reduce((b, r) => (r.m.mae < b.m.mae ? r : b)).key;
+        tbody.innerHTML = rows.map(r => {
+            const cls = r.key === bestKey ? ' class="is-best"' : "";
+            return `<tr${cls}>
+                <td>${r.label}</td>
+                <td>${r.m.mae?.toFixed(4) ?? "—"}</td>
+                <td>${r.m.rmse?.toFixed(4) ?? "—"}</td>
+                <td>${r.m.r2?.toFixed(4) ?? "—"}</td>
+            </tr>`;
+        }).join("");
+    }
+
+    // Meta weights (Ridge coefficients)
+    const w = metrics.meta_weights;
+    if (w) {
+        const total = Math.max(0.01, Math.abs(w.rf) + Math.abs(w.gb) + Math.abs(w.dl));
+        $("mw-rf").style.width  = `${(Math.abs(w.rf) / total) * 100}%`;
+        $("mw-gb").style.width  = `${(Math.abs(w.gb) / total) * 100}%`;
+        $("mw-dl").style.width  = `${(Math.abs(w.dl) / total) * 100}%`;
+        $("mw-rf-val").textContent  = w.rf.toFixed(2);
+        $("mw-gb-val").textContent  = w.gb.toFixed(2);
+        $("mw-dl-val").textContent  = w.dl.toFixed(2);
+        $("mw-bias").textContent    = w.bias.toFixed(2);
     }
 }
 

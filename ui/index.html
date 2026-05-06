@@ -16,7 +16,7 @@
         <a class="brand" href="/">
             <span class="brand-mark">
                 <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
-                    <rect x="2" y="2" width="28" height="28" rx="8" fill="#4F46E5"/>
+                    <rect x="2" y="2" width="28" height="28" rx="8" fill="#047857"/>
                     <path d="M10 17l4 4 8-10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </span>
@@ -38,36 +38,82 @@
 
 <!-- ─── Hero ───────────────────────────────────────────────────────── -->
 <section class="hero">
-    <span class="hero-eyebrow">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h7l-1 8 11-12h-7l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Hybrid ML + DL · Stacking Ensemble
-    </span>
-    <h1 class="hero-title">
-        Grade short-answer responses with the<br/>
-        <span class="hero-accent">precision of an examiner.</span>
-    </h1>
-    <p class="hero-sub">
-        GradeMate fuses lexical heuristics, classical ML tree ensembles, and a sentence-transformer
-        deep regressor through a stacking meta-model — producing calibrated, transparent scores.
-    </p>
+    <div class="hero-inner">
 
-    <div class="hero-stats">
-        <div class="stat" id="stat-mae">
-            <div class="stat-value" id="stat-mae-value">–</div>
-            <div class="stat-label">Test MAE</div>
+        <div class="hero-copy">
+            <p class="hero-eyebrow-line">
+                <span class="hero-line"></span>
+                <span class="hero-eyebrow-text">SciEntsBank · ML + DL stacking ensemble</span>
+            </p>
+
+            <h1 class="hero-title">
+                Reading short answers,
+                <span class="hero-accent">not just words.</span>
+            </h1>
+
+            <p class="hero-sub">
+                GradeMate combines TF-IDF heuristics, two tree ensembles and a sentence-transformer deep regressor under a single Ridge meta-model. Every score it produces is decomposable, calibrated, and visible.
+            </p>
+
+            <div class="hero-cta">
+                <a href="#main-card" class="cta-primary">
+                    Try a sample answer
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+                <a href="#stack" class="cta-ghost">See architecture</a>
+            </div>
+
+            <ul class="hero-metrics">
+                <li><span class="hero-metric-key">MAE</span><span class="hero-metric-val" id="stat-mae-value">–</span></li>
+                <li><span class="hero-metric-key">RMSE</span><span class="hero-metric-val" id="stat-rmse-value">–</span></li>
+                <li><span class="hero-metric-key">R²</span><span class="hero-metric-val" id="stat-r2-value">–</span></li>
+                <li><span class="hero-metric-key">Train rows</span><span class="hero-metric-val">4 969</span></li>
+            </ul>
         </div>
-        <div class="stat" id="stat-rmse">
-            <div class="stat-value" id="stat-rmse-value">–</div>
-            <div class="stat-label">Test RMSE</div>
-        </div>
-        <div class="stat" id="stat-r2">
-            <div class="stat-value" id="stat-r2-value">–</div>
-            <div class="stat-label">R² Score</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">5,509</div>
-            <div class="stat-label">SciEntsBank rows</div>
-        </div>
+
+        <aside class="hero-preview" aria-hidden="true">
+            <div class="hero-preview-head">
+                <span class="hero-preview-dot"></span>
+                <span class="hero-preview-label">Sample grading</span>
+                <span class="hero-preview-tag">demo</span>
+            </div>
+
+            <div class="hero-preview-q">
+                <span class="kicker">Question</span>
+                Why does iron rust faster in moist air?
+            </div>
+
+            <div class="hero-preview-a">
+                <span class="kicker">Student</span>
+                <em>"Because water and oxygen react with iron to form rust, and moist air has both."</em>
+            </div>
+
+            <div class="hero-preview-bars">
+                <div class="bar-row mini">
+                    <span class="bar-label">Random Forest</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 70%;"></div></div>
+                    <span class="bar-value">0.70</span>
+                </div>
+                <div class="bar-row mini">
+                    <span class="bar-label">Gradient Boost</span>
+                    <div class="bar-track"><div class="bar-fill bar-amber" style="width: 77%;"></div></div>
+                    <span class="bar-value">0.77</span>
+                </div>
+                <div class="bar-row mini">
+                    <span class="bar-label">Deep Regressor</span>
+                    <div class="bar-track"><div class="bar-fill bar-emerald" style="width: 92%;"></div></div>
+                    <span class="bar-value">0.92</span>
+                </div>
+            </div>
+
+            <div class="hero-preview-result">
+                <div class="hero-preview-score">
+                    <span class="hero-preview-score-num">8.9</span>
+                    <span class="hero-preview-score-den">/ 10</span>
+                </div>
+                <span class="verdict-chip v-excellent">Excellent</span>
+            </div>
+        </aside>
     </div>
 </section>
 
@@ -254,6 +300,58 @@
             <span class="explain-num">6</span>
             <h3>Calibrate</h3>
             <p>Output is clamped to [0, 1] and scaled by max-marks. A verdict label is attached for quick review.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Metrics ──────────────────────────────────────────────────── -->
+<section class="metrics" id="metrics">
+    <h2 class="explain-title">Model Performance</h2>
+    <p class="metrics-sub">On the held-out 540-row SciEntsBank test split. Numbers are populated live from <code>models/metrics.json</code>.</p>
+
+    <div class="metrics-grid">
+        <!-- Comparison table -->
+        <div class="metrics-card metrics-card-wide">
+            <h4 class="block-title">Per-model regression metrics</h4>
+            <div class="metrics-table-wrap">
+                <table class="metrics-table" id="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>MAE</th>
+                            <th>RMSE</th>
+                            <th>R²</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metrics-tbody">
+                        <tr><td colspan="4" class="metrics-empty">Train the models to populate metrics.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="metrics-foot">Lower MAE / RMSE is better; higher R² is better.</p>
+        </div>
+
+        <!-- Meta weights -->
+        <div class="metrics-card">
+            <h4 class="block-title">Ridge meta-regressor weights</h4>
+            <div class="meta-weights" id="meta-weights">
+                <div class="bar-row">
+                    <span class="bar-label">Random Forest</span>
+                    <div class="bar-track"><div class="bar-fill" id="mw-rf"></div></div>
+                    <span class="bar-value" id="mw-rf-val">—</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Gradient Boost</span>
+                    <div class="bar-track"><div class="bar-fill bar-amber" id="mw-gb"></div></div>
+                    <span class="bar-value" id="mw-gb-val">—</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Deep Regressor</span>
+                    <div class="bar-track"><div class="bar-fill bar-emerald" id="mw-dl"></div></div>
+                    <span class="bar-value" id="mw-dl-val">—</span>
+                </div>
+            </div>
+            <p class="metrics-foot">Bias: <code id="mw-bias">—</code> &nbsp;·&nbsp; Higher weight = the meta-model trusts that base learner more.</p>
         </div>
     </div>
 </section>
