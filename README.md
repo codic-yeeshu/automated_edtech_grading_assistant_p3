@@ -201,9 +201,3 @@ The Ridge meta-regressor's coefficients reveal the relative weight assigned to e
 ## 8. Tech stack
 
 `Python 3.11` · `FastAPI 0.115` · `scikit-learn 1.5` · `PyTorch 2.x (MPS)` · `sentence-transformers 2.7` · `transformers 4.40` · `easyocr 1.7` · `pytesseract 0.3` · `opencv-python` · `pandas` · `numpy`.
-
----
-
-## 9. License
-
-MIT. Built as a final ML+DL course project.
