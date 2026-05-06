@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradeMate · Hybrid ML+DL Answer Grader</title>
+    <meta name="description" content="GradeMate — automated short-answer grading powered by a stacking ensemble of Random Forest, Gradient Boosting and a MiniLM-based deep regressor.">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ─── Top App Bar ─────────────────────────────────────────────────── -->
+<header class="appbar">
+    <div class="appbar-inner">
+        <a class="brand" href="/">
+            <span class="brand-mark">
+                <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
+                    <rect x="2" y="2" width="28" height="28" rx="8" fill="#4F46E5"/>
+                    <path d="M10 17l4 4 8-10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <span class="brand-name">Grade<b>Mate</b></span>
+            <span class="brand-tag">v1.0</span>
+        </a>
+
+        <nav class="appbar-nav">
+            <a href="#how" class="appbar-link">How it works</a>
+            <a href="#stack" class="appbar-link">Architecture</a>
+            <a href="#metrics" class="appbar-link">Metrics</a>
+            <span class="status-pill" id="status-pill">
+                <span class="status-dot"></span>
+                <span id="status-text">Checking…</span>
+            </span>
+        </nav>
+    </div>
+</header>
+
+<!-- ─── Hero ───────────────────────────────────────────────────────── -->
+<section class="hero">
+    <span class="hero-eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h7l-1 8 11-12h-7l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Hybrid ML + DL · Stacking Ensemble
+    </span>
+    <h1 class="hero-title">
+        Grade short-answer responses with the<br/>
+        <span class="hero-accent">precision of an examiner.</span>
+    </h1>
+    <p class="hero-sub">
+        GradeMate fuses lexical heuristics, classical ML tree ensembles, and a sentence-transformer
+        deep regressor through a stacking meta-model — producing calibrated, transparent scores.
+    </p>
+
+    <div class="hero-stats">
+        <div class="stat" id="stat-mae">
+            <div class="stat-value" id="stat-mae-value">–</div>
+            <div class="stat-label">Test MAE</div>
+        </div>
+        <div class="stat" id="stat-rmse">
+            <div class="stat-value" id="stat-rmse-value">–</div>
+            <div class="stat-label">Test RMSE</div>
+        </div>
+        <div class="stat" id="stat-r2">
+            <div class="stat-value" id="stat-r2-value">–</div>
+            <div class="stat-label">R² Score</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">5,509</div>
+            <div class="stat-label">SciEntsBank rows</div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Main Workspace ─────────────────────────────────────────────── -->
+<main class="workspace">
+
+    <div class="workspace-grid">
+
+        <!-- ── LEFT PANEL — INPUT ─────────────────────────────────── -->
+        <section class="panel panel-input">
+
+            <div class="panel-head">
+                <div class="panel-title">
+                    <span class="panel-step">01</span>
+                    <h2>Submit answer to grade</h2>
+                </div>
+                <div class="mode-tabs" id="mode-tabs">
+                    <button class="mode-tab active" data-mode="text">Typed Answer</button>
+                    <button class="mode-tab" data-mode="image">Scanned Image</button>
+                </div>
+            </div>
+
+            <div class="not-trained-banner" id="not-trained" hidden>
+                <strong>Models not trained yet.</strong>
+                Run <code>python -m scripts.train</code> from the project root.
+            </div>
+
+            <form id="grade-form">
+
+                <div class="field">
+                    <label class="field-label">Exam question</label>
+                    <textarea id="f-question" rows="2" placeholder="e.g. Why does iron rust faster in moist air?"></textarea>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">Reference (model) answer</label>
+                    <textarea id="f-reference" rows="3" placeholder="The ideal answer the student is being compared against…"></textarea>
+                </div>
+
+                <!-- TEXT MODE -->
+                <div class="field" id="mode-text-field">
+                    <label class="field-label">Student's answer</label>
+                    <textarea id="f-student" rows="4" placeholder="Paste or type the student's answer here…"></textarea>
+                </div>
+
+                <!-- IMAGE MODE -->
+                <div class="field" id="mode-image-field" hidden>
+                    <label class="field-label">Upload scanned answer image</label>
+                    <label class="dropzone" for="f-image">
+                        <input type="file" id="f-image" accept="image/*" hidden>
+                        <div class="dropzone-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        </div>
+                        <div class="dropzone-text">
+                            <strong>Drop an image</strong> or <span class="dropzone-link">browse</span>
+                            <small>JPG · PNG · HEIC — handwritten or typed</small>
+                        </div>
+                        <img id="f-image-preview" class="dropzone-preview" alt="" hidden>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <div class="field flex-1">
+                        <label class="field-label">Maximum marks</label>
+                        <input type="number" id="f-maxmarks" value="10" min="1" max="100" step="0.5">
+                    </div>
+                    <div class="field flex-1">
+                        <label class="field-label">Subject (optional)</label>
+                        <input type="text" id="f-subject" placeholder="e.g. Science · Class 8">
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="btn-grade" type="submit">
+                    <span class="btn-label">Grade Answer</span>
+                    <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <span class="btn-spinner" id="btn-spinner" hidden></span>
+                </button>
+
+                <button type="button" class="btn-ghost" id="btn-sample">Load a sample question</button>
+            </form>
+        </section>
+
+        <!-- ── RIGHT PANEL — RESULT ───────────────────────────────── -->
+        <section class="panel panel-result" id="panel-result">
+
+            <div class="result-empty" id="result-empty">
+                <div class="result-empty-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <h3>Awaiting submission</h3>
+                <p>Fill in the question, reference and student answer on the left, then click <em>Grade</em>.</p>
+            </div>
+
+            <div class="result-body" id="result-body" hidden>
+
+                <div class="result-head">
+                    <div class="panel-title">
+                        <span class="panel-step">02</span>
+                        <h2>Grading result</h2>
+                    </div>
+                    <span class="verdict-chip" id="verdict-chip">—</span>
+                </div>
+
+                <!-- Score gauge -->
+                <div class="gauge">
+                    <svg class="gauge-svg" viewBox="0 0 200 120">
+                        <path class="gauge-bg" d="M20,110 A80,80 0 0,1 180,110" />
+                        <path class="gauge-fg" d="M20,110 A80,80 0 0,1 180,110" id="gauge-fg" />
+                    </svg>
+                    <div class="gauge-readout">
+                        <div class="gauge-score"><span id="score-num">0</span><small>/<span id="score-den">10</span></small></div>
+                        <div class="gauge-pct" id="score-pct">0%</div>
+                    </div>
+                </div>
+
+                <!-- Base learner contributions -->
+                <div class="block">
+                    <h4 class="block-title">Base-learner predictions</h4>
+                    <div class="bars">
+                        <div class="bar-row">
+                            <span class="bar-label">Random Forest</span>
+                            <div class="bar-track"><div class="bar-fill" id="bar-rf"></div></div>
+                            <span class="bar-value" id="val-rf">0.00</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">Gradient Boost</span>
+                            <div class="bar-track"><div class="bar-fill bar-amber" id="bar-gb"></div></div>
+                            <span class="bar-value" id="val-gb">0.00</span>
+                        </div>
+                        <div class="bar-row">
+                            <span class="bar-label">Deep Regressor</span>
+                            <div class="bar-track"><div class="bar-fill bar-emerald" id="bar-dl"></div></div>
+                            <span class="bar-value" id="val-dl">0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engineered features -->
+                <div class="block">
+                    <h4 class="block-title">Engineered feature signals</h4>
+                    <div class="chips" id="feat-chips"></div>
+                </div>
+
+                <!-- OCR text -->
+                <div class="block" id="ocr-block" hidden>
+                    <h4 class="block-title">Extracted text (OCR)</h4>
+                    <div class="ocr-text" id="ocr-text"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- ─── How it works ─────────────────────────────────────────────── -->
+<section class="explain" id="how">
+    <h2 class="explain-title">How GradeMate scores an answer</h2>
+    <div class="explain-grid">
+        <div class="explain-card">
+            <span class="explain-num">1</span>
+            <h3>Encode</h3>
+            <p>Reference + student text are normalised, tokenised and embedded with sentence-transformers/all-MiniLM-L6-v2.</p>
+        </div>
+        <div class="explain-card">
+            <span class="explain-num">2</span>
+            <h3>Engineer features</h3>
+            <p>Five signals: keyword overlap, TF-IDF cosine, semantic cosine, length ratio, bigram overlap.</p>
+        </div>
+        <div class="explain-card">
+            <span class="explain-num">3</span>
+            <h3>ML branch</h3>
+            <p>RandomForestRegressor and GradientBoostingRegressor each predict a normalised score in [0, 1].</p>
+        </div>
+        <div class="explain-card">
+            <span class="explain-num">4</span>
+            <h3>DL branch</h3>
+            <p>A 3-layer MLP regression head reads concat[ref, stu, |diff|, prod] over MiniLM embeddings.</p>
+        </div>
+        <div class="explain-card">
+            <span class="explain-num">5</span>
+            <h3>Stack</h3>
+            <p>Ridge meta-regressor blends the three predictions into a single calibrated score.</p>
+        </div>
+        <div class="explain-card">
+            <span class="explain-num">6</span>
+            <h3>Calibrate</h3>
+            <p>Output is clamped to [0, 1] and scaled by max-marks. A verdict label is attached for quick review.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Architecture diagram ─────────────────────────────────────── -->
+<section class="stack" id="stack">
+    <h2 class="explain-title">Architecture</h2>
+    <pre class="ascii-arch">
+   ┌──────────────────────┐
+   │  question · reference │
+   │  · student answer     │
+   └──────────┬───────────┘
+              │
+   ┌──────────▼───────────┐         ┌────────────────────┐
+   │  text preprocessing   │────────▶│ TF-IDF vectoriser  │
+   └──────────┬───────────┘         └─────────┬──────────┘
+              │                                │
+   ┌──────────▼──────────┐                     │
+   │ MiniLM sentence     │                     │
+   │ encoder (frozen)    │                     │
+   └────┬───────┬────────┘                     │
+        │       │                              │
+        ▼       ▼                              ▼
+   ┌─────────┐  ┌──────────────┐   ┌────────────────────┐
+   │ pair    │  │ engineered   │   │ engineered features│
+   │ features│  │ features (5) │◀──│ (cosine + lexical) │
+   └────┬────┘  └──────┬───────┘   └────────────────────┘
+        │              │
+        ▼              ▼
+   ┌─────────┐   ┌──────────────┐  ┌──────────────────┐
+   │ MLP DL  │   │ RandomForest │  │ GradientBoosting │
+   │ regressor│  └──────┬───────┘  └────────┬─────────┘
+   └────┬────┘          │                   │
+        │               ▼                   ▼
+        │         (rf_pred)           (gb_pred)
+        ▼               │                   │
+   (dl_pred)            ▼                   ▼
+        │       ┌─────────────────────────────┐
+        └──────▶│  Ridge stacking meta-model   │
+                └─────────────┬────────────────┘
+                              ▼
+                         final score</pre>
+</section>
+
+<!-- ─── Footer ───────────────────────────────────────────────────── -->
+<footer class="footer">
+    <span>GradeMate · ML + DL Project · Built with FastAPI · scikit-learn · PyTorch · sentence-transformers</span>
+</footer>
+
+<!-- ─── Toast ────────────────────────────────────────────────────── -->
+<div class="toast" id="toast" hidden></div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
