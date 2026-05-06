@@ -1,0 +1,53 @@
+/Users/amyeeshu/Desktop/aiml_project/GradeMate/venv/lib/python3.11/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+============================================================
+GradeMate — Hybrid ML+DL Training
+============================================================
+[data] train=4969  test=540
+[tfidf] fitting global vocab …
+[tfidf] saved → /Users/amyeeshu/Desktop/aiml_project/GradeMate/models/tfidf_vectorizer.joblib
+[encode] embedding 4969 reference + 4969 student answers …
+Batches:   0%|          | 0/78 [00:00<?, ?it/s]Batches:   1%|▏         | 1/78 [00:01<02:03,  1.61s/it]Batches:   3%|▎         | 2/78 [00:01<00:55,  1.38it/s]Batches:   4%|▍         | 3/78 [00:01<00:36,  2.05it/s]Batches:   6%|▋         | 5/78 [00:02<00:18,  3.92it/s]Batches:   9%|▉         | 7/78 [00:02<00:12,  5.75it/s]Batches:  12%|█▏        | 9/78 [00:02<00:08,  7.68it/s]Batches:  14%|█▍        | 11/78 [00:02<00:07,  9.46it/s]Batches:  17%|█▋        | 13/78 [00:02<00:05, 11.09it/s]Batches:  19%|█▉        | 15/78 [00:02<00:06, 10.23it/s]Batches:  22%|██▏       | 17/78 [00:02<00:05, 10.58it/s]Batches:  24%|██▍       | 19/78 [00:03<00:04, 12.35it/s]Batches:  28%|██▊       | 22/78 [00:03<00:03, 15.01it/s]Batches:  31%|███       | 24/78 [00:03<00:03, 15.11it/s]Batches:  33%|███▎      | 26/78 [00:03<00:03, 15.48it/s]Batches:  37%|███▋      | 29/78 [00:03<00:02, 17.84it/s]Batches:  42%|████▏     | 33/78 [00:03<00:02, 22.12it/s]Batches:  46%|████▌     | 36/78 [00:03<00:01, 21.20it/s]Batches:  50%|█████     | 39/78 [00:03<00:01, 23.02it/s]Batches:  54%|█████▍    | 42/78 [00:04<00:02, 17.19it/s]Batches:  58%|█████▊    | 45/78 [00:04<00:02, 15.43it/s]Batches:  62%|██████▏   | 48/78 [00:04<00:01, 17.76it/s]Batches:  65%|██████▌   | 51/78 [00:04<00:01, 15.24it/s]Batches:  72%|███████▏  | 56/78 [00:04<00:01, 20.82it/s]Batches:  76%|███████▌  | 59/78 [00:05<00:01, 17.32it/s]Batches:  79%|███████▉  | 62/78 [00:05<00:01, 15.53it/s]Batches:  86%|████████▌ | 67/78 [00:05<00:00, 21.23it/s]Batches:  90%|████████▉ | 70/78 [00:05<00:00, 17.41it/s]Batches:  94%|█████████▎| 73/78 [00:06<00:00, 15.58it/s]Batches:  96%|█████████▌| 75/78 [00:06<00:00, 12.89it/s]Batches:  99%|█████████▊| 77/78 [00:06<00:00,  8.16it/s]Batches: 100%|██████████| 78/78 [00:07<00:00, 10.92it/s]
+Batches:   0%|          | 0/78 [00:00<?, ?it/s]Batches:   1%|▏         | 1/78 [00:00<00:13,  5.87it/s]Batches:   3%|▎         | 2/78 [00:00<00:10,  7.33it/s]Batches:   5%|▌         | 4/78 [00:00<00:06, 10.59it/s]Batches:   9%|▉         | 7/78 [00:00<00:05, 13.84it/s]Batches:  13%|█▎        | 10/78 [00:00<00:03, 18.03it/s]Batches:  17%|█▋        | 13/78 [00:00<00:03, 21.20it/s]Batches:  21%|██        | 16/78 [00:00<00:02, 20.80it/s]Batches:  26%|██▌       | 20/78 [00:01<00:02, 24.83it/s]Batches:  31%|███       | 24/78 [00:01<00:01, 28.25it/s]Batches:  37%|███▋      | 29/78 [00:01<00:01, 32.24it/s]Batches:  44%|████▎     | 34/78 [00:01<00:01, 35.37it/s]Batches:  50%|█████     | 39/78 [00:01<00:01, 37.73it/s]Batches:  56%|█████▋    | 44/78 [00:01<00:00, 40.01it/s]Batches:  63%|██████▎   | 49/78 [00:01<00:00, 41.20it/s]Batches:  69%|██████▉   | 54/78 [00:01<00:00, 43.12it/s]Batches:  77%|███████▋  | 60/78 [00:01<00:00, 46.45it/s]Batches:  85%|████████▍ | 66/78 [00:02<00:00, 33.77it/s]Batches:  96%|█████████▌| 75/78 [00:02<00:00, 44.81it/s]Batches: 100%|██████████| 78/78 [00:02<00:00, 28.98it/s]
+[encode] done in 13.4s  (ref=(4969, 384), stu=(4969, 384))
+[encode] embedding 540 reference + 540 student answers …
+Batches:   0%|          | 0/9 [00:00<?, ?it/s]Batches:  22%|██▏       | 2/9 [00:00<00:00, 16.81it/s]Batches:  67%|██████▋   | 6/9 [00:00<00:00, 27.47it/s]Batches: 100%|██████████| 9/9 [00:00<00:00, 22.04it/s]Batches: 100%|██████████| 9/9 [00:00<00:00, 22.37it/s]
+Batches:   0%|          | 0/9 [00:00<?, ?it/s]Batches:  11%|█         | 1/9 [00:00<00:01,  4.23it/s]Batches:  56%|█████▌    | 5/9 [00:00<00:00, 16.88it/s]Batches: 100%|██████████| 9/9 [00:00<00:00, 20.47it/s]Batches: 100%|██████████| 9/9 [00:00<00:00, 17.62it/s]
+[encode] done in 0.9s  (ref=(540, 384), stu=(540, 384))
+[features] building engineered feature matrix …
+[ml] training Random Forest …
+[ml] RF trained in 0.5s
+[ml] training Gradient Boosting …
+[ml] GB trained in 1.0s
+[ml] saved → random_forest.joblib, gradient_boost.joblib
+[dl] building pair-features for DL branch …
+[DL] device = mps, train_n=4969, dim=1536
+[DL] epoch 1/6  train_mse=0.1432  val_mse=0.1313
+[DL] epoch 2/6  train_mse=0.1103  val_mse=0.1253
+[DL] epoch 3/6  train_mse=0.0978  val_mse=0.1231
+[DL] epoch 4/6  train_mse=0.0886  val_mse=0.1205
+[DL] epoch 5/6  train_mse=0.0818  val_mse=0.1140
+[DL] epoch 6/6  train_mse=0.0746  val_mse=0.1105
+[dl] saved → dl_regressor.pt
+[stack] generating out-of-fold base-learner predictions (5-fold KFold) …
+[stack] fold 1/5  train=3975  val=994
+[stack] fold 2/5  train=3975  val=994
+[stack] fold 3/5  train=3975  val=994
+[stack] fold 4/5  train=3975  val=994
+[stack] fold 5/5  train=3976  val=993
+[stack] training Ridge meta-regressor …
+[stack] saved → stacking_meta.joblib
+[stack] meta weights: rf=0.200  gb=0.146  dl=0.805  bias=-0.103
+[eval] evaluating on held-out test split …
+
+============================================================
+Final test-set performance (lower MAE / RMSE = better)
+============================================================
+  Random Forest           MAE=0.3211  RMSE=0.3790  R²=0.1758
+  Gradient Boosting       MAE=0.3200  RMSE=0.3746  R²=0.1952
+  Deep Regressor          MAE=0.2605  RMSE=0.3323  R²=0.3664
+  Stacking Ensemble       MAE=0.2609  RMSE=0.3323  R²=0.3665
+
+Metrics JSON → /Users/amyeeshu/Desktop/aiml_project/GradeMate/models/metrics.json
+Training complete.
+
